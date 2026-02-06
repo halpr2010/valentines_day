@@ -212,7 +212,7 @@ export default function Page() {
     if (!slide.yesDodgesMouse) return;
     const PROXIMITY_PX = 130; // Dodge when mouse gets within this many px
     const COOLDOWN_MS = 1000; // Stay still for 1s after dodging — that's the window to click
-    const throttleMs = 80;
+    const throttleMs = 30;
 
     let lastThrottle = 0;
     const handleMove = (e: MouseEvent) => {
@@ -415,9 +415,9 @@ export default function Page() {
             overflow: "hidden",
             zIndex: 1,
             maskImage:
-              "radial-gradient(ellipse 48% 36% at 50% 50%, transparent 99%, black 100%)",
+              "radial-gradient(ellipse 35% 28% at 50% 50%, transparent 99%, black 100%)",
             WebkitMaskImage:
-              "radial-gradient(ellipse 48% 36% at 50% 50%, transparent 99%, black 100%)",
+              "radial-gradient(ellipse 35% 28% at 50% 50%, transparent 99%, black 100%)",
           }}
         >
           {[
@@ -568,8 +568,8 @@ export default function Page() {
               position: "absolute",
               left: `${12 + i * 14}%`,
               top: -60,
-              width: 5,
-              height: 120,
+              width: 18,
+              height: 350,
               background:
                 "linear-gradient(to bottom, transparent 0%, rgba(60,15,5,0.4) 15%, rgba(180,50,20,0.8) 35%, rgba(255,100,30,0.95) 55%, rgba(255,180,50,1) 75%, rgba(255,220,120,1) 90%, rgba(255,255,255,1) 100%)",
               borderRadius: "2px 2px 50% 50%",
@@ -599,7 +599,7 @@ export default function Page() {
           `}</style>
           <img
             src="/porridge-jellycat.png"
-            alt="Porridge Jellycat"
+            alt=""
             style={{
               position: "fixed",
               left: "50%",
@@ -611,6 +611,10 @@ export default function Page() {
               pointerEvents: "none",
               animation: "porridge-peek 2s ease-in-out infinite",
               filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.2))",
+              display: "block",
+            }}
+            onError={(e) => {
+              console.error("Image failed to load:", e);
             }}
           />
         </>
