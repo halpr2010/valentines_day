@@ -79,7 +79,7 @@ const SLIDES: Record<SlideId, Slide> = {
   q5: {
     id: "q5",
     title: "Will you be my Valentine? 💘💘💘💘💘",
-    subtitle: "Pretty Please??...... 🥺👉👈💗",
+    subtitle: "Chase the ring 💍 and click it to say yes! 🏃‍♀️💨",
     yesLabel: "Yes 😭💞",
     noLabel: "No 😶",
     yesNext: "q6",
@@ -149,13 +149,41 @@ export default function Page() {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const yesButtonRef = useRef<HTMLButtonElement | null>(null);
   const lastDodgeTimeRef = useRef(0);
+  const ringRef = useRef<HTMLDivElement | null>(null);
   const [yesPos, setYesPos] = useState({ x: 0, y: 0 }); // translate px
   const [noPos, setNoPos] = useState({ x: 0, y: 0 });
+  const [ringPos, setRingPos] = useState({ x: 0, y: 0 });
 
   // reset positions when slide changes
   useEffect(() => {
     setYesPos({ x: 0, y: 0 });
     setNoPos({ x: 0, y: 0 });
+    setRingPos({ x: 0, y: 0 });
+  }, [slideId]);
+
+  // Q5: Ring floats around the screen
+  useEffect(() => {
+    if (slideId !== "q5") return;
+    
+    let raf = 0;
+    let lastJump = 0;
+    const jumpInterval = 800; // Jump every 800ms
+    
+    const animate = (t: number) => {
+      if (t - lastJump > jumpInterval) {
+        lastJump = t;
+        const w = typeof window !== "undefined" ? window.innerWidth : 1200;
+        const h = typeof window !== "undefined" ? window.innerHeight : 800;
+        // Keep ring on screen but move it around
+        const maxX = Math.min(w * 0.4, 480);
+        const maxY = Math.min(h * 0.4, 320);
+        setRingPos(randomOffset(maxX, maxY));
+      }
+      raf = requestAnimationFrame(animate);
+    };
+    
+    raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
   }, [slideId]);
 
   const randomOffset = (maxX: number, maxY: number) => {
@@ -635,6 +663,13 @@ export default function Page() {
                 animationDelay: `${delay}s`,
                 filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
               }}
+              onError={(e) => {
+                console.error(`Flying image failed to load: ${img.src}`, e);
+                (e.target as HTMLImageElement).style.border = "2px solid red";
+              }}
+              onLoad={() => {
+                console.log(`Flying image loaded: ${img.src}`);
+              }}
             />
           );
         })}
@@ -649,38 +684,32 @@ export default function Page() {
       {slideId === "q1" && (
         <>
           <style>{`
-            @keyframes porridge-peek {
-              0%, 100% { transform: translateY(0) rotate(-2deg); }
-              50% { transform: translateY(-12px) rotate(2deg); }
+            @keyframes float-gentle {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-8px); }
             }
           `}</style>
-          <div
+          <img
+            src="/us.webp"
+            alt=""
             style={{
               position: "fixed",
-              left: "50%",
-              top: "calc(50vh - 280px)",
-              transform: "translateX(-50%)",
-              width: "clamp(350px, 40vw, 500px)",
-              zIndex: 1,
+              left: "calc(50% + min(310px, 46vw) + 20px)",
+              top: "calc(50vh - 200px)",
+              width: "clamp(120px, 15vw, 180px)",
+              height: "auto",
+              zIndex: 3,
               pointerEvents: "none",
-              animation: "porridge-peek 2s ease-in-out infinite",
-              mixBlendMode: "multiply",
+              animation: "float-gentle 3s ease-in-out infinite",
+              filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.15))",
             }}
-          >
-            <img
-              src="/jellycat.jpg"
-              alt=""
-              style={{
-                width: "100%",
-                height: "auto",
-                display: "block",
-                filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.2))",
-              }}
-              onError={(e) => {
-                console.error("Image failed to load:", e);
-              }}
-            />
-          </div>
+            onError={(e) => {
+              console.error("Us image failed to load. Path:", "/us.webp", e);
+            }}
+            onLoad={() => {
+              console.log("Us image loaded successfully");
+            }}
+          />
         </>
       )}
       {slideId === "q3" && (
@@ -704,15 +733,51 @@ export default function Page() {
         <h1 style={titleStyle}>{slide.title}</h1>
         {slide.subtitle && <p style={subtitleStyle}>{slide.subtitle}</p>}
 
+        {/* Q5: Floating ring instead of Yes button */}
+        {slideId === "q5" && (
+          <>
+            <style>{`
+              @keyframes ring-float {
+                0%, 100% { transform: translateY(0) rotate(0deg); }
+                25% { transform: translateY(-10px) rotate(5deg); }
+                50% { transform: translateY(-5px) rotate(-5deg); }
+                75% { transform: translateY(-12px) rotate(3deg); }
+              }
+            `}</style>
+            <div
+              ref={ringRef}
+              onClick={onYesClick}
+              style={{
+                position: "fixed",
+                left: "50%",
+                top: "50%",
+                transform: `translate(calc(-50% + ${ringPos.x}px), calc(-50% + ${ringPos.y}px))`,
+                fontSize: "clamp(60px, 8vw, 100px)",
+                cursor: "pointer",
+                zIndex: 10,
+                pointerEvents: "auto",
+                animation: "ring-float 2s ease-in-out infinite",
+                filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))",
+                transition: "transform 0.8s ease-out",
+                userSelect: "none",
+              }}
+            >
+              💍
+            </div>
+          </>
+        )}
+
         <div style={buttonRowStyle}>
-          {/* YES */}
-          <button
-            ref={yesButtonRef}
-            style={yesStyle}
-            onClick={onYesClick}
-          >
-            {slide.yesLabel ?? "Yes 💖"}
-          </button>
+          {/* YES - hidden on Q5 */}
+          {slideId !== "q5" && (
+            <button
+              ref={yesButtonRef}
+              style={yesStyle}
+              onClick={onYesClick}
+            >
+              {slide.yesLabel ?? "Yes 💖"}
+            </button>
+          )}
 
           {/* NO */}
           {slideId === "q3" ? (
