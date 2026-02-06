@@ -161,20 +161,20 @@ export default function Page() {
     setRingPos({ x: 0, y: 0 });
   }, [slideId]);
 
-  // Q5: Ring floats around the screen
+  // Q5: Ring floats around the screen slowly
   useEffect(() => {
     if (slideId !== "q5") return;
     
     let raf = 0;
     let lastJump = 0;
-    const jumpInterval = 800; // Jump every 800ms
+    const jumpInterval = 3500; // Move every 3.5 seconds (slow)
     
     const animate = (t: number) => {
       if (t - lastJump > jumpInterval) {
         lastJump = t;
         const w = typeof window !== "undefined" ? window.innerWidth : 1200;
         const h = typeof window !== "undefined" ? window.innerHeight : 800;
-        // Keep ring on screen but move it around
+        // Keep ring on screen but move it around slowly
         const maxX = Math.min(w * 0.4, 480);
         const maxY = Math.min(h * 0.4, 320);
         setRingPos(randomOffset(maxX, maxY));
@@ -758,7 +758,7 @@ export default function Page() {
                 pointerEvents: "auto",
                 animation: "ring-float 2s ease-in-out infinite",
                 filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))",
-                transition: "transform 0.8s ease-out",
+                transition: "transform 3s ease-in-out",
                 userSelect: "none",
               }}
             >
