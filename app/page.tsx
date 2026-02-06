@@ -32,7 +32,7 @@ type Slide = {
 const SLIDES: Record<SlideId, Slide> = {
   q1: {
     id: "q1",
-    title: "Will you be my Valentine? 💘💘",
+    title: "Hi Beautiful, will you be my Valentine? 💘💘",
     subtitle: "❤️🩷❤️",
     yesLabel: "Yes 💖",
     noLabel: "No 💔",
@@ -136,8 +136,8 @@ export default function Page() {
     const start = performance.now();
     const tick = (t: number) => {
       const elapsed = (t - start) / 1000; // seconds
-      // Faster growth + much larger max (but text stays visible via layering below)
-      const s = clamp(1 + elapsed * 0.5, 1, 4.0);
+      // scale grows from 1.0 up to ~2.2 over ~8 seconds
+      const s = clamp(1 + elapsed * 0.5, 1, 2.4);
       setInflateScale(s);
       raf = requestAnimationFrame(tick);
     };
@@ -220,7 +220,6 @@ export default function Page() {
     boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
     textAlign: "center",
     position: "relative",
-    isolation: "isolate",
     overflow: "hidden",
   };
 
@@ -244,8 +243,7 @@ export default function Page() {
     justifyContent: "center",
     marginTop: "18px",
     position: "relative",
-    // extra space so huge button can be seen without covering the text
-    minHeight: "220px",
+    minHeight: "80px",
   };
 
   const btnBase: React.CSSProperties = {
@@ -270,7 +268,7 @@ export default function Page() {
   // No sizing rules
   const noScale = useMemo(() => {
     if (slide.noTiny) return 0.55;
-    if (slide.noVerySmall) return 0.4;
+    if (slide.noVerySmall) return 0.40;
     if (slide.noSmaller) return 0.75;
     return 1.0;
   }, [slideId, slide.noTiny, slide.noVerySmall, slide.noSmaller]);
@@ -279,15 +277,7 @@ export default function Page() {
     ...btnBase,
     background: "#ff3b7a",
     color: "white",
-
-    // Let the button get *huge* without pushing layout, and keep the question text readable on top.
-    position: "absolute",
-    left: `calc(50% + ${yesPos.x}px)`,
-    top: `calc(60% + ${yesPos.y}px)`,
-    transform: `translate(-50%, -50%) scale(${yesScale})`,
-    zIndex: 5,
-    opacity: 0.95,
-
+    transform: `translate(${yesPos.x}px, ${yesPos.y}px) scale(${yesScale})`,
     borderRadius: slide.yesBigRound ? "9999px" : "999px",
     padding: slide.yesBigRound ? "16px 30px" : btnBase.padding,
     fontWeight: slide.yesBigRound ? 700 : 600,
@@ -295,8 +285,6 @@ export default function Page() {
 
   const noStyle: React.CSSProperties = {
     ...btnBase,
-    position: "relative",
-    zIndex: 50,
     background: "#e9e9ef",
     color: "#222",
     transform: `translate(${noPos.x}px, ${noPos.y}px) scale(${noScale})`,
@@ -348,7 +336,9 @@ export default function Page() {
             </div>
           </div>
 
-          <div style={{ marginTop: 18, fontSize: 12, color: "#777" }}>💗💕💗</div>
+          <div style={{ marginTop: 18, fontSize: 12, color: "#777" }}>
+            💗💕💗
+          </div>
         </div>
       </div>
     );
@@ -389,7 +379,9 @@ export default function Page() {
             </button>
           </div>
 
-          <div style={{ marginTop: 14, fontSize: 12, color: "#777" }}>🩷🩷🩷</div>
+          <div style={{ marginTop: 14, fontSize: 12, color: "#777" }}>
+            🩷🩷🩷
+          </div>
         </div>
       </div>
     );
@@ -400,15 +392,11 @@ export default function Page() {
     <div style={bgStyle}>
       <div ref={cardRef} style={cardStyle}>
         <div style={{ fontSize: 46, marginBottom: 8 }}>💗</div>
-
-        {/* Text is always on top + doesn't block clicks */}
-        <div style={{ position: "relative", zIndex: 30, pointerEvents: "none" }}>
-          <h1 style={titleStyle}>{slide.title}</h1>
-          {slide.subtitle && <p style={subtitleStyle}>{slide.subtitle}</p>}
-        </div>
+        <h1 style={titleStyle}>{slide.title}</h1>
+        {slide.subtitle && <p style={subtitleStyle}>{slide.subtitle}</p>}
 
         <div style={buttonRowStyle}>
-          {/* YES (now absolute behind the text, can grow huge) */}
+          {/* YES */}
           <button
             style={yesStyle}
             onClick={onYesClick}
@@ -422,13 +410,22 @@ export default function Page() {
             {slide.yesLabel ?? "Yes 💖"}
           </button>
 
-          {/* NO (kept on top so it's always visible/clickable) */}
-          <button style={noStyle} onClick={onNoClick}>
+          {/* NO */}
+          <button
+            style={noStyle}
+            onClick={onNoClick}
+            // On Q7 it's unclickable; these are harmless
+            onMouseEnter={() => {
+              if (slide.noFliesUnclickable) return;
+            }}
+          >
             {slide.noLabel ?? "No 💔"}
           </button>
         </div>
 
-        <div style={{ marginTop: 16, fontSize: 12, color: "#777" }}>💘💕💘</div>
+        <div style={{ marginTop: 16, fontSize: 12, color: "#777" }}>
+          💘💕💘
+        </div>
       </div>
     </div>
   );
