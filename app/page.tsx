@@ -165,8 +165,15 @@ export default function Page() {
   useEffect(() => {
     if (slideId !== "q5") return;
     
+    // Start with an initial position
+    const w = typeof window !== "undefined" ? window.innerWidth : 1200;
+    const h = typeof window !== "undefined" ? window.innerHeight : 800;
+    const maxX = Math.min(w * 0.4, 480);
+    const maxY = Math.min(h * 0.4, 320);
+    setRingPos(randomOffset(maxX, maxY));
+    
     let raf = 0;
-    let lastJump = 0;
+    let lastJump = performance.now();
     const jumpInterval = 3500; // Move every 3.5 seconds (slow)
     
     const animate = (t: number) => {
@@ -737,11 +744,11 @@ export default function Page() {
         {slideId === "q5" && (
           <>
             <style>{`
-              @keyframes ring-float {
+              @keyframes ring-bob {
                 0%, 100% { transform: translateY(0) rotate(0deg); }
-                25% { transform: translateY(-10px) rotate(5deg); }
-                50% { transform: translateY(-5px) rotate(-5deg); }
-                75% { transform: translateY(-12px) rotate(3deg); }
+                25% { transform: translateY(-8px) rotate(3deg); }
+                50% { transform: translateY(-4px) rotate(-3deg); }
+                75% { transform: translateY(-10px) rotate(2deg); }
               }
             `}</style>
             <div
@@ -751,18 +758,24 @@ export default function Page() {
                 position: "fixed",
                 left: "50%",
                 top: "50%",
-                transform: `translate(calc(-50% + ${ringPos.x}px), calc(-50% + ${ringPos.y}px))`,
                 fontSize: "clamp(60px, 8vw, 100px)",
                 cursor: "pointer",
                 zIndex: 10,
                 pointerEvents: "auto",
-                animation: "ring-float 2s ease-in-out infinite",
                 filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))",
-                transition: "transform 3s ease-in-out",
                 userSelect: "none",
+                transform: `translate(calc(-50% + ${ringPos.x}px), calc(-50% + ${ringPos.y}px))`,
+                transition: "transform 3s ease-in-out",
               }}
             >
-              💍
+              <div
+                style={{
+                  animation: "ring-bob 2s ease-in-out infinite",
+                  display: "inline-block",
+                }}
+              >
+                💍
+              </div>
             </div>
           </>
         )}
