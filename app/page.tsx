@@ -765,7 +765,7 @@ export default function Page() {
                 filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))",
                 userSelect: "none",
                 transform: `translate(calc(-50% + ${ringPos.x}px), calc(-50% + ${ringPos.y}px))`,
-                transition: "transform 3s ease-in-out",
+                transition: "transform 1s ease-in-out",
               }}
             >
               <div
