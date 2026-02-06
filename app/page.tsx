@@ -137,7 +137,7 @@ export default function Page() {
     const tick = (t: number) => {
       const elapsed = (t - start) / 1000; // seconds
       // scale grows from 1.0 up to ~2.2 over ~8 seconds
-      const s = clamp(1 + elapsed * 0.35, 1, 2.4);
+      const s = clamp(1 + elapsed * 0.5, 1, 2.4);
       setInflateScale(s);
       raf = requestAnimationFrame(tick);
     };
