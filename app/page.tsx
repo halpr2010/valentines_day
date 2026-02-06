@@ -136,8 +136,8 @@ export default function Page() {
     const start = performance.now();
     const tick = (t: number) => {
       const elapsed = (t - start) / 1000; // seconds
-      // scale grows from 1.0 up to ~2.2 over ~8 seconds
-      const s = clamp(1 + elapsed * 0.5, 1, 2.4);
+      // scale grows indefinitely (no cap); 0.5 per second
+      const s = 1 + elapsed * 0.5;
       setInflateScale(s);
       raf = requestAnimationFrame(tick);
     };
@@ -220,7 +220,7 @@ export default function Page() {
     boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
     textAlign: "center",
     position: "relative",
-    overflow: "hidden",
+    overflow: "visible",
   };
 
   const titleStyle: React.CSSProperties = {
@@ -291,6 +291,9 @@ export default function Page() {
     opacity: slide.noFliesUnclickable ? 0.95 : 1,
     // Unclickable “No” on Q7
     pointerEvents: slide.noFliesUnclickable ? "none" : "auto",
+    // Stay on top when Yes grows huge (e.g. Q2), so No remains visible and clickable
+    position: "relative",
+    zIndex: 10,
   };
 
   // --- Q6 + Slide 8 layouts ---
