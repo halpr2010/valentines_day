@@ -196,11 +196,14 @@ export default function Page() {
     if (slide.noNext) setSlideId(slide.noNext);
   };
 
-  // Q4: Yes dodges on mouse movement — only when mouse gets close, with cooldown so user can catch it
+  // Q4: Yes dodges on mouse movement — clamped so it never moves off the page
   const dodgeYes = () => {
     const w = typeof window !== "undefined" ? window.innerWidth : 1200;
     const h = typeof window !== "undefined" ? window.innerHeight : 800;
-    setYesPos(randomOffset(w * 0.7, h * 0.6)); // smaller range = easier to chase
+    // Keep Yes on screen: max offset ~half viewport minus button margin
+    const maxX = Math.min(w * 0.45, 420);
+    const maxY = Math.min(h * 0.4, 280);
+    setYesPos(randomOffset(maxX, maxY));
     lastDodgeTimeRef.current = performance.now();
   };
 
@@ -225,7 +228,9 @@ export default function Page() {
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
       const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
-      if (dist < PROXIMITY_PX) dodgeYes();
+      if (dist < PROXIMITY_PX) {
+        dodgeYes();
+      }
     };
 
     document.addEventListener("mousemove", handleMove);
@@ -253,7 +258,7 @@ export default function Page() {
     textAlign: "center",
     position: "relative",
     zIndex: 2,
-    overflow: "visible",
+    overflow: slideId === "q3" ? "hidden" : "visible",
   };
 
   const titleStyle: React.CSSProperties = {
@@ -347,6 +352,60 @@ export default function Page() {
             0% { transform: translateX(-120px) scaleX(-1); }
             100% { transform: translateX(100vw) scaleX(-1); }
           }
+          @keyframes dino-curve-1 {
+            0% { transform: translate(0, 0) scaleX(1); }
+            25% { transform: translate(28vw, 12vh) scaleX(1); }
+            50% { transform: translate(55vw, -8vh) scaleX(1); }
+            75% { transform: translate(82vw, 18vh) scaleX(1); }
+            100% { transform: translate(110vw, 5vh) scaleX(1); }
+          }
+          @keyframes dino-curve-2 {
+            0% { transform: translate(100vw, 0) scaleX(-1); }
+            25% { transform: translate(72vw, 15vh) scaleX(-1); }
+            50% { transform: translate(45vw, -10vh) scaleX(-1); }
+            75% { transform: translate(18vw, 20vh) scaleX(-1); }
+            100% { transform: translate(-50px, 8vh) scaleX(-1); }
+          }
+          @keyframes dino-arc-3 {
+            0% { transform: translate(0, -30px) scaleX(1); }
+            33% { transform: translate(35vw, 25vh) scaleX(1); }
+            66% { transform: translate(70vw, 50vh) scaleX(1); }
+            100% { transform: translate(105vw, 105vh) scaleX(1); }
+          }
+          @keyframes dino-arc-4 {
+            0% { transform: translate(100vw, -30px) scaleX(-1); }
+            33% { transform: translate(65vw, 30vh) scaleX(-1); }
+            66% { transform: translate(30vw, 55vh) scaleX(-1); }
+            100% { transform: translate(-50px, 108vh) scaleX(-1); }
+          }
+          @keyframes dino-swerve-5 {
+            0% { transform: translate(0, 0) scaleX(1); }
+            20% { transform: translate(15vw, -15vh) scaleX(1); }
+            40% { transform: translate(45vw, 5vh) scaleX(1); }
+            60% { transform: translate(70vw, -10vh) scaleX(1); }
+            80% { transform: translate(95vw, 8vh) scaleX(1); }
+            100% { transform: translate(115vw, -5vh) scaleX(1); }
+          }
+          @keyframes dino-swerve-6 {
+            0% { transform: translate(100vw, 0) scaleX(-1); }
+            25% { transform: translate(75vw, -10vh) scaleX(-1); }
+            50% { transform: translate(50vw, 6vh) scaleX(-1); }
+            75% { transform: translate(25vw, -8vh) scaleX(-1); }
+            100% { transform: translate(-80px, 0) scaleX(-1); }
+          }
+          @keyframes dino-loop-7 {
+            0% { transform: translate(0, 50vh) scaleX(1); }
+            25% { transform: translate(50vw, 25vh) scaleX(1); }
+            50% { transform: translate(100vw, 50vh) scaleX(-1); }
+            75% { transform: translate(50vw, 75vh) scaleX(-1); }
+            100% { transform: translate(-50px, 50vh) scaleX(1); }
+          }
+          @keyframes dino-loop-8 {
+            0% { transform: translate(100vw, 25vh) scaleX(-1); }
+            33% { transform: translate(60vw, 55vh) scaleX(-1); }
+            66% { transform: translate(20vw, 30vh) scaleX(1); }
+            100% { transform: translate(-80px, 55vh) scaleX(1); }
+          }
         `}</style>
         <div
           style={{
@@ -362,21 +421,31 @@ export default function Page() {
           }}
         >
           {[
-            { emoji: "🦕", top: "8%", anim: "dino-walk-left", delay: 0 },
-            { emoji: "🦖", top: "14%", anim: "dino-walk-right", delay: 1.2 },
-            { emoji: "🦕", top: "84%", anim: "dino-walk-right", delay: 0.6 },
-            { emoji: "🦖", top: "90%", anim: "dino-walk-left", delay: 1.8 },
-            { emoji: "🦕", top: "6%", anim: "dino-walk-right", delay: 2.4 },
-            { emoji: "🦖", top: "94%", anim: "dino-walk-left", delay: 3 },
+            { emoji: "🦕", top: "6%", anim: "dino-walk-left", delay: 0 },
+            { emoji: "🦖", top: "12%", anim: "dino-walk-right", delay: 1.2 },
+            { emoji: "🦕", top: "82%", anim: "dino-walk-right", delay: 0.6 },
+            { emoji: "🦖", top: "92%", anim: "dino-walk-left", delay: 1.8 },
+            { emoji: "🦕", top: "4%", anim: "dino-curve-1", delay: 0.3 },
+            { emoji: "🦖", top: "18%", anim: "dino-curve-2", delay: 2.1 },
+            { emoji: "🦕", top: "0", anim: "dino-arc-3", delay: 1.5 },
+            { emoji: "🦖", top: "0", anim: "dino-arc-4", delay: 2.8 },
+            { emoji: "🦕", top: "25%", anim: "dino-swerve-5", delay: 3.2 },
+            { emoji: "🦖", top: "96%", anim: "dino-swerve-6", delay: 0.9 },
+            { emoji: "🦕", top: "0", anim: "dino-loop-7", delay: 2.4 },
+            { emoji: "🦖", top: "0", anim: "dino-loop-8", delay: 1.8 },
+            { emoji: "🦕", top: "8%", anim: "dino-curve-1", delay: 3.6 },
+            { emoji: "🦖", top: "88%", anim: "dino-curve-2", delay: 4.2 },
+            { emoji: "🦕", top: "30%", anim: "dino-swerve-5", delay: 0.5 },
+            { emoji: "🦖", top: "72%", anim: "dino-swerve-6", delay: 2.9 },
           ].map((d, i) => (
             <div
               key={i}
               style={{
                 position: "absolute",
-                left: 0,
+                left: "0",
                 top: d.top,
-                fontSize: "clamp(28px, 4vw, 42px)",
-                animation: `${d.anim} ${8 + (i % 3) * 2}s linear infinite`,
+                fontSize: "clamp(48px, 7vw, 72px)",
+                animation: `${d.anim} ${10 + (i % 4) * 1.5}s ease-in-out infinite`,
                 animationDelay: `${d.delay}s`,
               }}
             >
@@ -480,7 +549,7 @@ export default function Page() {
       <style>{`
         @keyframes meteor-fall {
           0% { transform: translateY(-30px) rotate(-25deg); opacity: 1; }
-          100% { transform: translateY(100vh) translateX(-200px) rotate(-25deg); opacity: 0.2; }
+          100% { transform: translateY(100vh) translateX(-200px) rotate(-25deg); opacity: 0.3; }
         }
       `}</style>
       <div
@@ -498,12 +567,14 @@ export default function Page() {
             style={{
               position: "absolute",
               left: `${12 + i * 14}%`,
-              top: -40,
-              width: 3,
-              height: 80,
+              top: -60,
+              width: 5,
+              height: 120,
               background:
-                "linear-gradient(to bottom, transparent 0%, rgba(255,180,100,0.7) 40%, rgba(255,255,220,0.95) 100%)",
-              borderRadius: 2,
+                "linear-gradient(to bottom, transparent 0%, rgba(60,15,5,0.4) 15%, rgba(180,50,20,0.8) 35%, rgba(255,100,30,0.95) 55%, rgba(255,180,50,1) 75%, rgba(255,220,120,1) 90%, rgba(255,255,255,1) 100%)",
+              borderRadius: "2px 2px 50% 50%",
+              boxShadow:
+                "0 0 12px rgba(255,200,100,0.6), 0 0 4px rgba(255,255,255,0.8)",
               transform: "rotate(-25deg)",
               animation: "meteor-fall 2.5s linear infinite",
               animationDelay: `${i * 0.5}s`,
@@ -518,6 +589,48 @@ export default function Page() {
   return (
     <div style={bgStyle}>
       {meteors}
+      {slideId === "q1" && (
+        <>
+          <style>{`
+            @keyframes porridge-peek {
+              0%, 100% { transform: translateY(0) rotate(-2deg); }
+              50% { transform: translateY(-12px) rotate(2deg); }
+            }
+          `}</style>
+          <img
+            src="/porridge-jellycat.png"
+            alt="Porridge Jellycat"
+            style={{
+              position: "fixed",
+              left: "50%",
+              top: "calc(50vh - 280px)",
+              transform: "translateX(-50%)",
+              width: "clamp(350px, 40vw, 500px)",
+              height: "auto",
+              zIndex: 1,
+              pointerEvents: "none",
+              animation: "porridge-peek 2s ease-in-out infinite",
+              filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.2))",
+            }}
+          />
+        </>
+      )}
+      {slideId === "q3" && (
+        <style>{`
+          @keyframes no-shake {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            10% { transform: translateX(-6px) translateY(-2px); }
+            20% { transform: translateX(6px) translateY(2px); }
+            30% { transform: translateX(-6px) translateY(2px); }
+            40% { transform: translateX(6px) translateY(-2px); }
+            50% { transform: translateX(-5px) translateY(0); }
+            60% { transform: translateX(5px) translateY(-3px); }
+            70% { transform: translateX(-5px) translateY(3px); }
+            80% { transform: translateX(6px) translateY(0); }
+            90% { transform: translateX(-6px) translateY(-2px); }
+          }
+        `}</style>
+      )}
       <div ref={cardRef} style={cardStyle}>
         <div style={{ fontSize: 46, marginBottom: 8 }}>💗</div>
         <h1 style={titleStyle}>{slide.title}</h1>
@@ -534,16 +647,28 @@ export default function Page() {
           </button>
 
           {/* NO */}
-          <button
-            style={noStyle}
-            onClick={onNoClick}
-            // On Q7 it's unclickable; these are harmless
-            onMouseEnter={() => {
-              if (slide.noFliesUnclickable) return;
-            }}
-          >
-            {slide.noLabel ?? "No 💔"}
-          </button>
+          {slideId === "q3" ? (
+            <div
+              style={{
+                display: "inline-flex",
+                animation: "no-shake 0.1s ease-in-out infinite",
+              }}
+            >
+              <button style={noStyle} onClick={onNoClick}>
+                {slide.noLabel ?? "No 💔"}
+              </button>
+            </div>
+          ) : (
+            <button
+              style={noStyle}
+              onClick={onNoClick}
+              onMouseEnter={() => {
+                if (slide.noFliesUnclickable) return;
+              }}
+            >
+              {slide.noLabel ?? "No 💔"}
+            </button>
+          )}
         </div>
 
         <div style={{ marginTop: 16, fontSize: 12, color: "#777" }}>
