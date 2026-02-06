@@ -537,9 +537,71 @@ export default function Page() {
   }
 
   if (slideId === "s8") {
+    // Arrange 9 images in a circle around the center
+    const imageCount = 9;
+    const w = typeof window !== "undefined" ? window.innerWidth : 1200;
+    const h = typeof window !== "undefined" ? window.innerHeight : 800;
+    const radius = Math.min(w, h) * 0.35; // Circle radius - positioned to avoid white box
+    const images = Array.from({ length: imageCount }, (_, i) => ({
+      src: `/${i + 1}.jpg`,
+      angle: (i * 360) / imageCount, // Distribute evenly around circle
+    }));
+
     return (
       <div style={bgStyle}>
-        <div style={{ ...cardStyle, width: "min(820px, 92vw)" }}>
+        {/* Semi-transparent images arranged in a circle behind the card */}
+        <div
+          style={{
+            position: "fixed",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            width: radius * 2,
+            height: radius * 2,
+            zIndex: 1,
+            pointerEvents: "none",
+          }}
+        >
+          {images.map((img, i) => {
+            const angleRad = (img.angle * Math.PI) / 180;
+            const x = Math.cos(angleRad) * radius;
+            const y = Math.sin(angleRad) * radius;
+            const size = Math.min(radius * 0.4, 180); // Size of each circular image
+
+            return (
+              <div
+                key={i}
+                style={{
+                  position: "absolute",
+                  left: `calc(50% + ${x}px)`,
+                  top: `calc(50% + ${y}px)`,
+                  transform: "translate(-50%, -50%)",
+                  width: `${size}px`,
+                  height: `${size}px`,
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  opacity: 0.25,
+                  border: "2px solid rgba(255,255,255,0.3)",
+                }}
+              >
+                <img
+                  src={img.src}
+                  alt=""
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                  onError={(e) => {
+                    console.error(`Image ${i + 1} failed to load:`, e);
+                  }}
+                />
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{ ...cardStyle, width: "min(820px, 92vw)", position: "relative", zIndex: 2 }}>
           <div style={{ fontSize: 56, marginBottom: 10 }}>💌💘💌</div>
           <h1 style={{ ...titleStyle, fontSize: 28 }}>{SLIDES.s8.title}</h1>
           <p style={{ ...subtitleStyle, fontSize: 15 }}>{SLIDES.s8.subtitle}</p>
