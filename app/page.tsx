@@ -337,7 +337,54 @@ export default function Page() {
   if (slideId === "q6") {
     return (
       <div style={bgStyle}>
-        <div style={{ ...cardStyle, width: "min(720px, 92vw)" }}>
+        {/* Animated dinosaurs in background — masked so they don't cross into the white card */}
+        <style>{`
+          @keyframes dino-walk-left {
+            0% { transform: translateX(100vw) scaleX(1); }
+            100% { transform: translateX(-120px) scaleX(1); }
+          }
+          @keyframes dino-walk-right {
+            0% { transform: translateX(-120px) scaleX(-1); }
+            100% { transform: translateX(100vw) scaleX(-1); }
+          }
+        `}</style>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            pointerEvents: "none",
+            overflow: "hidden",
+            zIndex: 1,
+            maskImage:
+              "radial-gradient(ellipse 48% 36% at 50% 50%, transparent 99%, black 100%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 48% 36% at 50% 50%, transparent 99%, black 100%)",
+          }}
+        >
+          {[
+            { emoji: "🦕", top: "8%", anim: "dino-walk-left", delay: 0 },
+            { emoji: "🦖", top: "14%", anim: "dino-walk-right", delay: 1.2 },
+            { emoji: "🦕", top: "84%", anim: "dino-walk-right", delay: 0.6 },
+            { emoji: "🦖", top: "90%", anim: "dino-walk-left", delay: 1.8 },
+            { emoji: "🦕", top: "6%", anim: "dino-walk-right", delay: 2.4 },
+            { emoji: "🦖", top: "94%", anim: "dino-walk-left", delay: 3 },
+          ].map((d, i) => (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: 0,
+                top: d.top,
+                fontSize: "clamp(28px, 4vw, 42px)",
+                animation: `${d.anim} ${8 + (i % 3) * 2}s linear infinite`,
+                animationDelay: `${d.delay}s`,
+              }}
+            >
+              {d.emoji}
+            </div>
+          ))}
+        </div>
+        <div style={{ ...cardStyle, width: "min(720px, 92vw)", position: "relative", zIndex: 2 }}>
           <div style={{ fontSize: 56, marginBottom: 10 }}>🎉💘🎉</div>
           <h1 style={{ ...titleStyle, fontSize: 28 }}>{SLIDES.q6.title}</h1>
           <p style={{ ...subtitleStyle, fontSize: 15 }}>{SLIDES.q6.subtitle}</p>
