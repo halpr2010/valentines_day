@@ -211,8 +211,8 @@ export default function Page() {
   useEffect(() => {
     if (!slide.yesDodgesMouse) return;
     const PROXIMITY_PX = 130; // Dodge when mouse gets within this many px
-    const COOLDOWN_MS = 1000; // Stay still for 1s after dodging — that's the window to click
-    const throttleMs = 30;
+    const COOLDOWN_MS = 600; // Stay still for 0.6s after dodging — that's the window to click
+    const throttleMs = 10;
 
     let lastThrottle = 0;
     const handleMove = (e: MouseEvent) => {
@@ -323,6 +323,7 @@ export default function Page() {
     borderRadius: slide.yesBigRound ? "9999px" : "999px",
     padding: slide.yesBigRound ? "16px 30px" : btnBase.padding,
     fontWeight: slide.yesBigRound ? 700 : 600,
+    transition: slide.yesDodgesMouse ? "transform 60ms ease-out" : btnBase.transition,
   };
 
   const noStyle: React.CSSProperties = {
@@ -543,13 +544,57 @@ export default function Page() {
     );
   }
 
-  // --- Meteor shower for Q3 ---
+  // --- Flying images for Q3 ---
+  const flyingImages = [
+    { src: "/lucy.webp", name: "lucy" },
+    { src: "/me1.webp", name: "me1" },
+    { src: "/me2.webp", name: "me2" },
+    { src: "/me4.webp", name: "me4" },
+    { src: "/me6.webp", name: "me6" },
+    { src: "/me7.webp", name: "me7" },
+    { src: "/me8.webp", name: "me8" },
+    { src: "/me9.webp", name: "me9" },
+    { src: "/me10.webp", name: "me10" },
+    { src: "/me11.webp", name: "me11" },
+    { src: "/shrek.webp", name: "shrek" },
+  ];
+
   const meteors = slideId === "q3" && (
     <>
       <style>{`
-        @keyframes meteor-fall {
-          0% { transform: translateY(-30px) rotate(-25deg); opacity: 1; }
-          100% { transform: translateY(100vh) translateX(-200px) rotate(-25deg); opacity: 0.3; }
+        @keyframes fly-diagonal-1 {
+          0% { transform: translate(-100px, -100px) rotate(0deg); opacity: 0.8; }
+          100% { transform: translate(calc(100vw + 100px), calc(100vh + 100px)) rotate(360deg); opacity: 0.8; }
+        }
+        @keyframes fly-diagonal-2 {
+          0% { transform: translate(calc(100vw + 100px), -100px) rotate(0deg); opacity: 0.8; }
+          100% { transform: translate(-100px, calc(100vh + 100px)) rotate(-360deg); opacity: 0.8; }
+        }
+        @keyframes fly-horizontal-1 {
+          0% { transform: translate(-150px, 0) rotate(0deg); opacity: 0.7; }
+          100% { transform: translate(calc(100vw + 150px), 0) rotate(180deg); opacity: 0.7; }
+        }
+        @keyframes fly-horizontal-2 {
+          0% { transform: translate(calc(100vw + 150px), 0) rotate(0deg); opacity: 0.7; }
+          100% { transform: translate(-150px, 0) rotate(-180deg); opacity: 0.7; }
+        }
+        @keyframes fly-vertical-1 {
+          0% { transform: translate(0, -150px) rotate(0deg); opacity: 0.75; }
+          100% { transform: translate(0, calc(100vh + 150px)) rotate(180deg); opacity: 0.75; }
+        }
+        @keyframes fly-vertical-2 {
+          0% { transform: translate(0, calc(100vh + 150px)) rotate(0deg); opacity: 0.75; }
+          100% { transform: translate(0, -150px) rotate(-180deg); opacity: 0.75; }
+        }
+        @keyframes fly-arc-1 {
+          0% { transform: translate(-100px, -100px) rotate(0deg); opacity: 0.8; }
+          50% { transform: translate(50vw, 50vh) rotate(180deg); opacity: 0.9; }
+          100% { transform: translate(calc(100vw + 100px), calc(100vh + 100px)) rotate(360deg); opacity: 0.8; }
+        }
+        @keyframes fly-arc-2 {
+          0% { transform: translate(calc(100vw + 100px), -100px) rotate(0deg); opacity: 0.8; }
+          50% { transform: translate(50vw, 50vh) rotate(-180deg); opacity: 0.9; }
+          100% { transform: translate(-100px, calc(100vh + 100px)) rotate(-360deg); opacity: 0.8; }
         }
       `}</style>
       <div
@@ -561,26 +606,38 @@ export default function Page() {
           zIndex: 1,
         }}
       >
-        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              left: `${12 + i * 14}%`,
-              top: -60,
-              width: 18,
-              height: 350,
-              background:
-                "linear-gradient(to bottom, transparent 0%, rgba(60,15,5,0.4) 15%, rgba(180,50,20,0.8) 35%, rgba(255,100,30,0.95) 55%, rgba(255,180,50,1) 75%, rgba(255,220,120,1) 90%, rgba(255,255,255,1) 100%)",
-              borderRadius: "2px 2px 50% 50%",
-              boxShadow:
-                "0 0 12px rgba(255,200,100,0.6), 0 0 4px rgba(255,255,255,0.8)",
-              transform: "rotate(-25deg)",
-              animation: "meteor-fall 2.5s linear infinite",
-              animationDelay: `${i * 0.5}s`,
-            }}
-          />
-        ))}
+        {flyingImages.map((img, i) => {
+          const animations = [
+            "fly-diagonal-1",
+            "fly-diagonal-2",
+            "fly-horizontal-1",
+            "fly-horizontal-2",
+            "fly-vertical-1",
+            "fly-vertical-2",
+            "fly-arc-1",
+            "fly-arc-2",
+          ];
+          const anim = animations[i % animations.length];
+          const duration = 3 + (i % 3) * 0.5; // 3-4.5 seconds
+          const delay = (i * 0.3) % 2; // Staggered delays
+          const size = 80 + (i % 4) * 20; // 80-140px
+
+          return (
+            <img
+              key={img.name}
+              src={img.src}
+              alt=""
+              style={{
+                position: "absolute",
+                width: `${size}px`,
+                height: "auto",
+                animation: `${anim} ${duration}s linear infinite`,
+                animationDelay: `${delay}s`,
+                filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
+              }}
+            />
+          );
+        })}
       </div>
     </>
   );
@@ -597,26 +654,33 @@ export default function Page() {
               50% { transform: translateY(-12px) rotate(2deg); }
             }
           `}</style>
-          <img
-            src="/porridge-jellycat.png"
-            alt=""
+          <div
             style={{
               position: "fixed",
               left: "50%",
               top: "calc(50vh - 280px)",
               transform: "translateX(-50%)",
               width: "clamp(350px, 40vw, 500px)",
-              height: "auto",
               zIndex: 1,
               pointerEvents: "none",
               animation: "porridge-peek 2s ease-in-out infinite",
-              filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.2))",
-              display: "block",
+              mixBlendMode: "multiply",
             }}
-            onError={(e) => {
-              console.error("Image failed to load:", e);
-            }}
-          />
+          >
+            <img
+              src="/jellycat.jpg"
+              alt=""
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.2))",
+              }}
+              onError={(e) => {
+                console.error("Image failed to load:", e);
+              }}
+            />
+          </div>
         </>
       )}
       {slideId === "q3" && (
