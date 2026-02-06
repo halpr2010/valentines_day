@@ -147,6 +147,8 @@ export default function Page() {
 
   // --- Dodging / flying positions ---
   const cardRef = useRef<HTMLDivElement | null>(null);
+  const yesButtonRef = useRef<HTMLButtonElement | null>(null);
+  const lastDodgeTimeRef = useRef(0);
   const [yesPos, setYesPos] = useState({ x: 0, y: 0 }); // translate px
   const [noPos, setNoPos] = useState({ x: 0, y: 0 });
 
@@ -194,26 +196,38 @@ export default function Page() {
     if (slide.noNext) setSlideId(slide.noNext);
   };
 
-  // Q4: Yes dodges on mouse movement anywhere on the page; moves all over viewport
+  // Q4: Yes dodges on mouse movement — only when mouse gets close, with cooldown so user can catch it
   const dodgeYes = () => {
     const w = typeof window !== "undefined" ? window.innerWidth : 1200;
     const h = typeof window !== "undefined" ? window.innerHeight : 800;
-    setYesPos(randomOffset(w * 0.9, h * 0.9));
+    setYesPos(randomOffset(w * 0.7, h * 0.6)); // smaller range = easier to chase
+    lastDodgeTimeRef.current = performance.now();
   };
 
-  // Q4: Listen to mousemove anywhere on page so Yes dodges faster / more reactively
+  // Q4: Dodge only when mouse is near the button, and only after cooldown (so user can click during pause)
   useEffect(() => {
     if (!slide.yesDodgesMouse) return;
-    const throttleMs = 40; // Dodge every ~40ms for fast, reactive movement
-    let last = 0;
-    const handleMove = () => {
+    const PROXIMITY_PX = 130; // Dodge when mouse gets within this many px
+    const COOLDOWN_MS = 1000; // Stay still for 1s after dodging — that's the window to click
+    const throttleMs = 80;
+
+    let lastThrottle = 0;
+    const handleMove = (e: MouseEvent) => {
       const now = performance.now();
-      if (now - last < throttleMs) return;
-      last = now;
-      const w = typeof window !== "undefined" ? window.innerWidth : 1200;
-      const h = typeof window !== "undefined" ? window.innerHeight : 800;
-      setYesPos(randomOffset(w * 0.9, h * 0.9));
+      if (now - lastThrottle < throttleMs) return;
+      lastThrottle = now;
+
+      const btn = yesButtonRef.current;
+      if (!btn) return;
+      if (now - lastDodgeTimeRef.current < COOLDOWN_MS) return; // Cooldown: button stays put
+
+      const rect = btn.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+      if (dist < PROXIMITY_PX) dodgeYes();
     };
+
     document.addEventListener("mousemove", handleMove);
     return () => document.removeEventListener("mousemove", handleMove);
   }, [slideId, slide.yesDodgesMouse]);
@@ -238,6 +252,7 @@ export default function Page() {
     boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
     textAlign: "center",
     position: "relative",
+    zIndex: 2,
     overflow: "visible",
   };
 
@@ -246,6 +261,8 @@ export default function Page() {
     margin: "0 0 10px",
     color: "#111",
     lineHeight: 1.2,
+    position: "relative",
+    zIndex: 15,
   };
 
   const subtitleStyle: React.CSSProperties = {
@@ -253,13 +270,15 @@ export default function Page() {
     color: "#555",
     fontSize: "14px",
     whiteSpace: "pre-line",
+    position: "relative",
+    zIndex: 15,
   };
 
   const buttonRowStyle: React.CSSProperties = {
     display: "flex",
     gap: "14px",
     justifyContent: "center",
-    marginTop: "18px",
+    marginTop: slide.yesHuge ? "36px" : "18px",
     position: "relative",
     minHeight: "80px",
   };
@@ -408,9 +427,50 @@ export default function Page() {
     );
   }
 
+  // --- Meteor shower for Q3 ---
+  const meteors = slideId === "q3" && (
+    <>
+      <style>{`
+        @keyframes meteor-fall {
+          0% { transform: translateY(-30px) rotate(-25deg); opacity: 1; }
+          100% { transform: translateY(100vh) translateX(-200px) rotate(-25deg); opacity: 0.2; }
+        }
+      `}</style>
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          pointerEvents: "none",
+          overflow: "hidden",
+          zIndex: 1,
+        }}
+      >
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              left: `${12 + i * 14}%`,
+              top: -40,
+              width: 3,
+              height: 80,
+              background:
+                "linear-gradient(to bottom, transparent 0%, rgba(255,180,100,0.7) 40%, rgba(255,255,220,0.95) 100%)",
+              borderRadius: 2,
+              transform: "rotate(-25deg)",
+              animation: "meteor-fall 2.5s linear infinite",
+              animationDelay: `${i * 0.5}s`,
+            }}
+          />
+        ))}
+      </div>
+    </>
+  );
+
   // --- Normal question slides (q1/q2/q3/q4/q5/q7) ---
   return (
     <div style={bgStyle}>
+      {meteors}
       <div ref={cardRef} style={cardStyle}>
         <div style={{ fontSize: 46, marginBottom: 8 }}>💗</div>
         <h1 style={titleStyle}>{slide.title}</h1>
@@ -419,14 +479,9 @@ export default function Page() {
         <div style={buttonRowStyle}>
           {/* YES */}
           <button
+            ref={yesButtonRef}
             style={yesStyle}
             onClick={onYesClick}
-            onMouseEnter={() => {
-              if (slide.yesDodgesMouse) dodgeYes();
-            }}
-            onMouseMove={() => {
-              if (slide.yesDodgesMouse) dodgeYes();
-            }}
           >
             {slide.yesLabel ?? "Yes 💖"}
           </button>
