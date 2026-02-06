@@ -339,3 +339,94 @@ export default function Page() {
           <div style={{ marginTop: 18, fontSize: 12, color: "#777" }}>
             💗💕💗
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (slideId === "s8") {
+    return (
+      <div style={bgStyle}>
+        <div style={{ ...cardStyle, width: "min(820px, 92vw)" }}>
+          <div style={{ fontSize: 56, marginBottom: 10 }}>💌💘💌</div>
+          <h1 style={{ ...titleStyle, fontSize: 28 }}>{SLIDES.s8.title}</h1>
+          <p style={{ ...subtitleStyle, fontSize: 15 }}>{SLIDES.s8.subtitle}</p>
+
+          <div style={{ marginTop: 16 }}>
+            <textarea
+              placeholder={`Dear Valentine… 💖\n\n[Write your full letter here]\n\n💘💘💘`}
+              style={{
+                width: "100%",
+                minHeight: 320,
+                borderRadius: 16,
+                border: "1px solid rgba(0,0,0,0.12)",
+                padding: 16,
+                fontSize: 15,
+                lineHeight: 1.45,
+                outline: "none",
+                resize: "vertical",
+                background: "rgba(255,255,255,0.95)",
+              }}
+            />
+          </div>
+
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 16 }}>
+            <button
+              onClick={() => setSlideId("q1")}
+              style={{ ...btnBase, background: "#ff3b7a", color: "white", minWidth: 180 }}
+            >
+              Restart 💞
+            </button>
+          </div>
+
+          <div style={{ marginTop: 14, fontSize: 12, color: "#777" }}>
+            🩷🩷🩷
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Normal question slides (q1/q2/q3/q4/q5/q7) ---
+  return (
+    <div style={bgStyle}>
+      <div ref={cardRef} style={cardStyle}>
+        <div style={{ fontSize: 46, marginBottom: 8 }}>💗</div>
+        <h1 style={titleStyle}>{slide.title}</h1>
+        {slide.subtitle && <p style={subtitleStyle}>{slide.subtitle}</p>}
+
+        <div style={buttonRowStyle}>
+          {/* YES */}
+          <button
+            style={yesStyle}
+            onClick={onYesClick}
+            onMouseEnter={() => {
+              if (slide.yesDodgesMouse) dodgeYes();
+            }}
+            onMouseMove={() => {
+              if (slide.yesDodgesMouse) dodgeYes();
+            }}
+          >
+            {slide.yesLabel ?? "Yes 💖"}
+          </button>
+
+          {/* NO */}
+          <button
+            style={noStyle}
+            onClick={onNoClick}
+            // On Q7 it's unclickable; these are harmless
+            onMouseEnter={() => {
+              if (slide.noFliesUnclickable) return;
+            }}
+          >
+            {slide.noLabel ?? "No 💔"}
+          </button>
+        </div>
+
+        <div style={{ marginTop: 16, fontSize: 12, color: "#777" }}>
+          💘💕💘
+        </div>
+      </div>
+    </div>
+  );
+}
