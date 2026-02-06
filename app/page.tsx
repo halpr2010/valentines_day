@@ -194,11 +194,29 @@ export default function Page() {
     if (slide.noNext) setSlideId(slide.noNext);
   };
 
-  // Q4: Yes dodges whenever mouse approaches / hovers
+  // Q4: Yes dodges on mouse movement anywhere on the page; moves all over viewport
   const dodgeYes = () => {
-    // keep it roughly inside the card area
-    setYesPos(randomOffset(220, 90));
+    const w = typeof window !== "undefined" ? window.innerWidth : 1200;
+    const h = typeof window !== "undefined" ? window.innerHeight : 800;
+    setYesPos(randomOffset(w * 0.9, h * 0.9));
   };
+
+  // Q4: Listen to mousemove anywhere on page so Yes dodges faster / more reactively
+  useEffect(() => {
+    if (!slide.yesDodgesMouse) return;
+    const throttleMs = 40; // Dodge every ~40ms for fast, reactive movement
+    let last = 0;
+    const handleMove = () => {
+      const now = performance.now();
+      if (now - last < throttleMs) return;
+      last = now;
+      const w = typeof window !== "undefined" ? window.innerWidth : 1200;
+      const h = typeof window !== "undefined" ? window.innerHeight : 800;
+      setYesPos(randomOffset(w * 0.9, h * 0.9));
+    };
+    document.addEventListener("mousemove", handleMove);
+    return () => document.removeEventListener("mousemove", handleMove);
+  }, [slideId, slide.yesDodgesMouse]);
 
   // --- Styles (keeps your pink/white vibe) ---
   const bgStyle: React.CSSProperties = {
