@@ -79,7 +79,7 @@ const SLIDES: Record<SlideId, Slide> = {
   q5: {
     id: "q5",
     title: "Will you be my Valentine? 💘💘💘💘💘",
-    subtitle: "Chase the ring 💍 and click it to say yes! 🏃‍♀️💨",
+    subtitle: "Chase the heart ❤️ and click it to say yes! 🏃‍♀️💨",
     yesLabel: "Yes 😭💞",
     noLabel: "No 😶",
     yesNext: "q6",
@@ -566,7 +566,7 @@ export default function Page() {
             const angleRad = (img.angle * Math.PI) / 180;
             const x = Math.cos(angleRad) * radius;
             const y = Math.sin(angleRad) * radius;
-            const size = Math.min(radius * 0.4, 180); // Size of each circular image
+            const size = Math.min(radius * 0.7, 280); // Size of each circular image - bigger
 
             return (
               <div
@@ -580,7 +580,7 @@ export default function Page() {
                   height: `${size}px`,
                   borderRadius: "50%",
                   overflow: "hidden",
-                  opacity: 0.25,
+                  opacity: 0.5,
                   border: "2px solid rgba(255,255,255,0.3)",
                 }}
               >
@@ -836,7 +836,7 @@ export default function Page() {
                   display: "inline-block",
                 }}
               >
-                💍
+                ❤️
               </div>
             </div>
           </>
