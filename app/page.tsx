@@ -167,6 +167,9 @@ export default function Page() {
     setYesPos({ x: 0, y: 0 });
     setNoPos({ x: 0, y: 0 });
     setRingPos({ x: 0, y: 0 });
+    if (slideId === "env") {
+      setEnvOpen(false);
+    }
   }, [slideId]);
 
   // Q5: Ring floats around the screen slowly
@@ -388,23 +391,123 @@ export default function Page() {
       setEnvOpen(true);
       setTimeout(() => {
         setSlideId("q1");
-      }, 650);
+      }, 950);
     };
 
     return (
       <div style={bgStyle}>
         <style>{`
-          @keyframes flap-open {
-            0% { transform: rotateX(0deg); transform-origin: bottom center; }
-            100% { transform: rotateX(-180deg); transform-origin: bottom center; }
+          .env-stage {
+            perspective: 1200px;
+            perspective-origin: center center;
+            width: 320px;
+            height: 240px;
+            margin: 30px auto;
+            position: relative;
           }
-          @keyframes letter-slide {
-            0% { transform: translateX(-50%) translateY(0); }
-            100% { transform: translateX(-50%) translateY(-20px); }
+          .env-letter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(95px);
+            width: 240px;
+            height: 160px;
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
           }
-          @keyframes seal-fade {
-            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+          .env.open .env-letter {
+            transform: translateX(-50%) translateY(-78px);
+          }
+          .env-container {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 180px;
+          }
+          .env-back {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            background: #f8e8e8;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+            border: 2px solid rgba(255, 200, 200, 0.5);
+          }
+          .env-left-flap {
+            position: absolute;
+            bottom: 120px;
+            left: 0;
+            width: 50%;
+            height: 60px;
+            background: #f5e0e0;
+            clip-path: polygon(0 0, 100% 0, 100% 100%);
+            border-right: 1px solid rgba(255, 200, 200, 0.4);
+            transform-origin: bottom left;
+          }
+          .env-right-flap {
+            position: absolute;
+            bottom: 120px;
+            right: 0;
+            width: 50%;
+            height: 60px;
+            background: #f5e0e0;
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            border-left: 1px solid rgba(255, 200, 200, 0.4);
+            transform-origin: bottom right;
+          }
+          .env-front-fold {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: #f0d8d8;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+            border-top: 2px solid rgba(255, 200, 200, 0.5);
+          }
+          .env-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: #f8e8e8;
+            clip-path: polygon(0 0, 100% 0, 50% 52%);
+            border: 2px solid rgba(255, 200, 200, 0.6);
+            transform-origin: top center;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 3;
+          }
+          .env.open .env-flap {
+            transform: rotateX(-155deg);
+          }
+          .env-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 52px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            z-index: 5;
+            pointer-events: auto;
+            user-select: none;
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+          }
+          .env-seal.open {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.6);
+            pointer-events: none;
           }
         `}</style>
         <div style={{ ...cardStyle, width: "min(620px, 92vw)" }}>
@@ -415,92 +518,24 @@ export default function Page() {
             {SLIDES.env.subtitle}
           </p>
 
-          <div
-            style={{
-              position: "relative",
-              width: "280px",
-              height: "200px",
-              margin: "40px auto",
-            }}
-          >
-            {/* Envelope body */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-                width: "100%",
-                height: "140px",
-                background: "#f8e8e8",
-                clipPath: "polygon(0 0, 100% 0, 95% 100%, 5% 100%)",
-                border: "2px solid rgba(255, 200, 200, 0.6)",
-              }}
-            />
-            {/* Envelope flap */}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100px",
-                background: "#f8e8e8",
-                clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                border: "2px solid rgba(255, 200, 200, 0.6)",
-                transformOrigin: "bottom center",
-                animation: envOpen ? "flap-open 0.6s ease-out forwards" : "none",
-              }}
-            />
-            {/* Letter */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: "10px",
-                left: "50%",
-                transform: envOpen ? "translateX(-50%) translateY(-20px)" : "translateX(-50%)",
-                width: "85%",
-                height: "100px",
-                background: "rgba(255, 255, 255, 0.95)",
-                border: "1px solid rgba(0, 0, 0, 0.1)",
-                borderRadius: "4px",
-                transition: envOpen ? "none" : "transform 0.6s ease-out",
-                animation: envOpen ? "letter-slide 0.6s ease-out forwards" : "none",
-              }}
-            />
-            {/* Heart seal */}
-            {!envOpen && (
-              <div
+          <div className="env-stage">
+            <div className={`env ${envOpen ? "open" : ""}`}>
+              <div className="env-letter"></div>
+              <div className="env-container">
+                <div className="env-back"></div>
+                <div className="env-left-flap"></div>
+                <div className="env-right-flap"></div>
+                <div className="env-front-fold"></div>
+                <div className="env-flap"></div>
+              </div>
+              <button
+                className={`env-seal ${envOpen ? "open" : ""}`}
                 onClick={handleSealClick}
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  fontSize: "48px",
-                  cursor: "pointer",
-                  zIndex: 5,
-                  pointerEvents: "auto",
-                  userSelect: "none",
-                }}
+                disabled={envOpen}
               >
                 💗
-              </div>
-            )}
-            {envOpen && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  fontSize: "48px",
-                  zIndex: 5,
-                  animation: "seal-fade 0.4s ease-out forwards",
-                  pointerEvents: "none",
-                }}
-              >
-                💗
-              </div>
-            )}
+              </button>
+            </div>
           </div>
 
           <div style={{ marginTop: 20, fontSize: 12, color: "#777" }}>
