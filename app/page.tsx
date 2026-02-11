@@ -385,168 +385,200 @@ export default function Page() {
     zIndex: 10,
   };
 
-  // --- Envelope intro screen ---
+    // --- Envelope intro screen ---
   if (slideId === "env") {
     const handleSealClick = () => {
+      if (envOpen) return;
       setEnvOpen(true);
-      setTimeout(() => {
-        setSlideId("q1");
-      }, 950);
+      // let the animation play, then go to Q1
+      setTimeout(() => setSlideId("q1"), 950);
     };
 
     return (
       <div style={bgStyle}>
-        <style>{`
-          .env-stage {
-            perspective: 1200px;
-            perspective-origin: center center;
-            width: 320px;
-            height: 240px;
-            margin: 30px auto;
-            position: relative;
-          }
-          .env-letter {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(95px);
-            width: 240px;
-            height: 160px;
-            background: rgba(255, 255, 255, 0.98);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 2px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1;
-          }
-          .env.open .env-letter {
-            transform: translateX(-50%) translateY(-78px);
-          }
-          .env-container {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 280px;
-            height: 180px;
-          }
-          .env-back {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 120px;
-            background: #f8e8e8;
-            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
-            border: 2px solid rgba(255, 200, 200, 0.5);
-          }
-          .env-left-flap {
-            position: absolute;
-            bottom: 120px;
-            left: 0;
-            width: 50%;
-            height: 60px;
-            background: #f5e0e0;
-            clip-path: polygon(0 0, 100% 0, 100% 100%);
-            border-right: 1px solid rgba(255, 200, 200, 0.4);
-            transform-origin: bottom left;
-          }
-          .env-right-flap {
-            position: absolute;
-            bottom: 120px;
-            right: 0;
-            width: 50%;
-            height: 60px;
-            background: #f5e0e0;
-            clip-path: polygon(0 0, 100% 0, 0 100%);
-            border-left: 1px solid rgba(255, 200, 200, 0.4);
-            transform-origin: bottom right;
-          }
-          .env-front-fold {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 40px;
-            background: #f0d8d8;
-            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
-            border-top: 2px solid rgba(255, 200, 200, 0.5);
-          }
-          .env-flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background: #f8e8e8;
-            clip-path: polygon(0 0, 100% 0, 50% 52%);
-            border: 2px solid rgba(255, 200, 200, 0.6);
-            transform-origin: top center;
-            transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 3;
-          }
-          .env.open .env-flap {
-            transform: rotateX(-155deg);
-          }
-          .env-seal {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 52px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 0;
-            z-index: 5;
-            pointer-events: auto;
-            user-select: none;
-            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-          }
-          .env-seal.open {
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0.6);
-            pointer-events: none;
-          }
-        `}</style>
-        <div style={{ ...cardStyle, width: "min(620px, 92vw)" }}>
-          <h1 style={{ ...titleStyle, fontSize: 28, marginBottom: 8, position: "relative", zIndex: 15 }}>
-            {SLIDES.env.title}
-          </h1>
-          <p style={{ ...subtitleStyle, fontSize: 15, marginBottom: 20, position: "relative", zIndex: 15 }}>
-            {SLIDES.env.subtitle}
-          </p>
+        <div style={{ ...cardStyle, width: "min(760px, 92vw)", padding: 28 }}>
+          <div style={{ position: "relative", zIndex: 10, pointerEvents: "none" }}>
+            <h1 style={{ ...titleStyle, fontSize: 28 }}>You’ve got mail 💌💖</h1>
+            <p style={{ ...subtitleStyle, fontSize: 15 }}>
+              Click the heart seal to open… 💘💘💘
+            </p>
+          </div>
 
-          <div className="env-stage">
+          <div className="stage">
+            {/* Letter (slides up out of the envelope) */}
+            <div className={`letter ${envOpen ? "open" : ""}`}>
+              <div className="letterHead">Dear Valentine… 💖</div>
+              <div className="letterLine">I have something to ask you 🥺💘</div>
+              <div className="letterLine">Open me… 😈💕</div>
+            </div>
+
+            {/* Envelope */}
             <div className={`env ${envOpen ? "open" : ""}`}>
-              <div className="env-letter"></div>
-              <div className="env-container">
-                <div className="env-back"></div>
-                <div className="env-left-flap"></div>
-                <div className="env-right-flap"></div>
-                <div className="env-front-fold"></div>
-                <div className="env-flap"></div>
-              </div>
+              <div className="envBack" />
+              <div className="envLeft" />
+              <div className="envRight" />
+              <div className="envFront" />
+              <div className="envFlap" />
+
+              {/* Heart seal */}
               <button
-                className={`env-seal ${envOpen ? "open" : ""}`}
+                className={`seal ${envOpen ? "open" : ""}`}
                 onClick={handleSealClick}
-                disabled={envOpen}
+                aria-label="Open envelope"
               >
                 💗
               </button>
             </div>
           </div>
 
-          <div style={{ marginTop: 20, fontSize: 12, color: "#777" }}>
-            💌💕💌
-          </div>
+          <div style={{ marginTop: 14, fontSize: 12, color: "#777" }}>💘💕💘</div>
+
+          <style>{`
+            .stage {
+              position: relative;
+              margin-top: 18px;
+              display: grid;
+              place-items: center;
+              height: 360px;
+              perspective: 1200px;
+              perspective-origin: center center;
+            }
+
+            /* Letter */
+            .letter {
+              position: absolute;
+              width: min(420px, 82vw);
+              height: 250px;
+              border-radius: 18px;
+              background: rgba(255, 255, 255, 0.96);
+              border: 1px solid rgba(0, 0, 0, 0.10);
+              box-shadow: 0 26px 70px rgba(0, 0, 0, 0.14);
+              z-index: 2;
+              display: grid;
+              align-content: start;
+              padding: 18px;
+              text-align: left;
+
+              /* starts mostly "inside" */
+              transform: translateY(95px) scale(0.98);
+              transition: transform 900ms cubic-bezier(0.18, 0.9, 0.2, 1);
+            }
+
+            .letter.open {
+              transform: translateY(-78px) scale(1);
+            }
+
+            .letterHead {
+              font-weight: 800;
+              color: #333;
+              margin-bottom: 10px;
+            }
+            .letterLine {
+              color: #555;
+              margin-top: 6px;
+            }
+
+            /* Envelope base */
+            .env {
+              position: relative;
+              width: min(460px, 86vw);
+              height: 270px;
+              transform: translateY(18px);
+              z-index: 3;
+            }
+
+            .envBack {
+              position: absolute;
+              inset: 0;
+              border-radius: 18px;
+              background: rgba(255, 255, 255, 0.78);
+              border: 1px solid rgba(0, 0, 0, 0.10);
+              box-shadow: 0 18px 50px rgba(0, 0, 0, 0.10);
+              z-index: 1;
+            }
+
+            .envLeft,
+            .envRight {
+              position: absolute;
+              inset: 0;
+              border-radius: 18px;
+              z-index: 2;
+              opacity: 0.95;
+            }
+
+            .envLeft {
+              clip-path: polygon(0 0, 55% 52%, 0 100%);
+              background: rgba(255, 59, 122, 0.10);
+            }
+            .envRight {
+              clip-path: polygon(100% 0, 45% 52%, 100% 100%);
+              background: rgba(255, 59, 122, 0.10);
+            }
+
+            .envFront {
+              position: absolute;
+              inset: 0;
+              border-radius: 18px;
+              z-index: 4;
+              clip-path: polygon(0 100%, 100% 100%, 50% 48%);
+              background: rgba(255, 255, 255, 0.55);
+              border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            }
+
+            /* Top flap opens upward/back (video-style) */
+            .envFlap {
+              position: absolute;
+              inset: 0;
+              border-radius: 18px;
+              z-index: 5;
+              clip-path: polygon(0 0, 100% 0, 50% 52%);
+              background: rgba(255, 59, 122, 0.14);
+              transform-origin: top center;
+              transform: rotateX(0deg);
+              transition: transform 750ms cubic-bezier(0.2, 0.95, 0.2, 1);
+              backface-visibility: hidden;
+            }
+
+            .env.open .envFlap {
+              transform: rotateX(-155deg);
+            }
+
+            /* Heart seal */
+            .seal {
+              position: absolute;
+              left: 50%;
+              top: 52%;
+              transform: translate(-50%, -50%);
+              z-index: 6;
+              width: 72px;
+              height: 72px;
+              border-radius: 999px;
+              border: 1px solid rgba(0, 0, 0, 0.10);
+              background: rgba(255, 59, 122, 0.92);
+              color: #fff;
+              box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+              cursor: pointer;
+              font-size: 30px;
+              display: grid;
+              place-items: center;
+              transition: transform 160ms ease, opacity 260ms ease;
+            }
+
+            .seal:hover {
+              transform: translate(-50%, -50%) scale(1.06);
+            }
+
+            .seal.open {
+              opacity: 0;
+              transform: translate(-50%, -50%) scale(0.6);
+              pointer-events: none;
+            }
+          `}</style>
         </div>
       </div>
     );
   }
 
-  // --- Q6 + Slide 8 layouts ---
   if (slideId === "q6") {
     return (
       <div style={bgStyle}>
