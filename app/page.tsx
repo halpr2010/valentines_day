@@ -749,7 +749,7 @@ export default function Page() {
     const imageCount = 9;
     const w = typeof window !== "undefined" ? window.innerWidth : 1200;
     const h = typeof window !== "undefined" ? window.innerHeight : 800;
-    const radius = Math.min(w, h) * 0.35; // Circle radius - positioned to avoid white box
+    const radius = Math.min(w, h) * 0.48; // Circle radius - increased for better visibility to the sides
     const images = Array.from({ length: imageCount }, (_, i) => ({
       src: `/${i + 1}.jpg`,
       angle: (i * 360) / imageCount, // Distribute evenly around circle
@@ -834,7 +834,7 @@ export default function Page() {
 
           <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 16 }}>
             <button
-              onClick={() => setSlideId("q1")}
+              onClick={() => setSlideId("env")}
               style={{ ...btnBase, background: "#ff3b7a", color: "white", minWidth: 180 }}
             >
               Restart 💞
