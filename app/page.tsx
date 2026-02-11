@@ -452,7 +452,7 @@ export default function Page() {
               border-radius: 18px;
               background: rgba(255, 255, 255, 0.96);
               border: 1px solid rgba(0, 0, 0, 0.10);
-              box-shadow: 0 26px 70px rgba(0, 0, 0, 0.14);
+              box-shadow: 0 20px 55px rgba(0, 0, 0, 0.18);
               z-index: 2;
               display: grid;
               align-content: start;
@@ -487,52 +487,56 @@ export default function Page() {
               z-index: 3;
             }
 
+            /* Back plate */
             .envBack {
               position: absolute;
               inset: 0;
               border-radius: 18px;
-              background: rgba(255, 255, 255, 0.78);
-              border: 1px solid rgba(0, 0, 0, 0.10);
-              box-shadow: 0 18px 50px rgba(0, 0, 0, 0.10);
+              background: #fff6ec; /* opaque paper */
+              border: 1px solid rgba(0, 0, 0, 0.12);
+              box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
               z-index: 1;
             }
 
+            /* Side flaps */
             .envLeft,
             .envRight {
               position: absolute;
               inset: 0;
               border-radius: 18px;
               z-index: 2;
-              opacity: 0.95;
+              background: #fff1e4; /* slightly darker paper */
             }
 
             .envLeft {
               clip-path: polygon(0 0, 55% 52%, 0 100%);
-              background: rgba(255, 59, 122, 0.10);
-            }
-            .envRight {
-              clip-path: polygon(100% 0, 45% 52%, 100% 100%);
-              background: rgba(255, 59, 122, 0.10);
+              border-left: 1px solid rgba(0, 0, 0, 0.10);
             }
 
+            .envRight {
+              clip-path: polygon(100% 0, 45% 52%, 100% 100%);
+              border-right: 1px solid rgba(0, 0, 0, 0.10);
+            }
+
+            /* Bottom/front fold */
             .envFront {
               position: absolute;
               inset: 0;
               border-radius: 18px;
               z-index: 4;
               clip-path: polygon(0 100%, 100% 100%, 50% 48%);
-              background: rgba(255, 255, 255, 0.55);
-              border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+              background: #ffeadd;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.12);
             }
 
-            /* Top flap opens upward/back (video-style) */
+            /* Top flap */
             .envFlap {
               position: absolute;
               inset: 0;
               border-radius: 18px;
               z-index: 5;
               clip-path: polygon(0 0, 100% 0, 50% 52%);
-              background: rgba(255, 59, 122, 0.14);
+              background: #ffe0d2; /* flap slightly darker */
               transform-origin: top center;
               transform: rotateX(0deg);
               transition: transform 750ms cubic-bezier(0.2, 0.95, 0.2, 1);
