@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-type SlideId = "q1" | "q2" | "q3" | "q4" | "q5" | "q7" | "q6" | "s8";
+type SlideId = "env" | "q1" | "q2" | "q3" | "q4" | "q5" | "q7" | "q6" | "s8";
 
 type Slide = {
   id: SlideId;
@@ -30,6 +30,13 @@ type Slide = {
 };
 
 const SLIDES: Record<SlideId, Slide> = {
+  env: {
+    id: "env",
+    title: "You've got mail 💌💖",
+    subtitle: "Click the heart seal to open… 💘💘💘",
+    terminal: true,
+  },
+
   q1: {
     id: "q1",
     title: "Hi Beautiful, will you be my Valentine? 💘💘",
@@ -121,8 +128,9 @@ function clamp(n: number, a: number, b: number) {
 }
 
 export default function Page() {
-  const [slideId, setSlideId] = useState<SlideId>("q1");
+  const [slideId, setSlideId] = useState<SlideId>("env");
   const slide = SLIDES[slideId];
+  const [envOpen, setEnvOpen] = useState(false);
 
   // --- Q2: Yes inflates over time ---
   const [inflateScale, setInflateScale] = useState(1);
@@ -373,6 +381,135 @@ export default function Page() {
     position: "relative",
     zIndex: 10,
   };
+
+  // --- Envelope intro screen ---
+  if (slideId === "env") {
+    const handleSealClick = () => {
+      setEnvOpen(true);
+      setTimeout(() => {
+        setSlideId("q1");
+      }, 650);
+    };
+
+    return (
+      <div style={bgStyle}>
+        <style>{`
+          @keyframes flap-open {
+            0% { transform: rotateX(0deg); transform-origin: bottom center; }
+            100% { transform: rotateX(-180deg); transform-origin: bottom center; }
+          }
+          @keyframes letter-slide {
+            0% { transform: translateX(-50%) translateY(0); }
+            100% { transform: translateX(-50%) translateY(-20px); }
+          }
+          @keyframes seal-fade {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+          }
+        `}</style>
+        <div style={{ ...cardStyle, width: "min(620px, 92vw)" }}>
+          <h1 style={{ ...titleStyle, fontSize: 28, marginBottom: 8, position: "relative", zIndex: 15 }}>
+            {SLIDES.env.title}
+          </h1>
+          <p style={{ ...subtitleStyle, fontSize: 15, marginBottom: 20, position: "relative", zIndex: 15 }}>
+            {SLIDES.env.subtitle}
+          </p>
+
+          <div
+            style={{
+              position: "relative",
+              width: "280px",
+              height: "200px",
+              margin: "40px auto",
+            }}
+          >
+            {/* Envelope body */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "100%",
+                height: "140px",
+                background: "#f8e8e8",
+                clipPath: "polygon(0 0, 100% 0, 95% 100%, 5% 100%)",
+                border: "2px solid rgba(255, 200, 200, 0.6)",
+              }}
+            />
+            {/* Envelope flap */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100px",
+                background: "#f8e8e8",
+                clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+                border: "2px solid rgba(255, 200, 200, 0.6)",
+                transformOrigin: "bottom center",
+                animation: envOpen ? "flap-open 0.6s ease-out forwards" : "none",
+              }}
+            />
+            {/* Letter */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: "10px",
+                left: "50%",
+                transform: envOpen ? "translateX(-50%) translateY(-20px)" : "translateX(-50%)",
+                width: "85%",
+                height: "100px",
+                background: "rgba(255, 255, 255, 0.95)",
+                border: "1px solid rgba(0, 0, 0, 0.1)",
+                borderRadius: "4px",
+                transition: envOpen ? "none" : "transform 0.6s ease-out",
+                animation: envOpen ? "letter-slide 0.6s ease-out forwards" : "none",
+              }}
+            />
+            {/* Heart seal */}
+            {!envOpen && (
+              <div
+                onClick={handleSealClick}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  fontSize: "48px",
+                  cursor: "pointer",
+                  zIndex: 5,
+                  pointerEvents: "auto",
+                  userSelect: "none",
+                }}
+              >
+                💗
+              </div>
+            )}
+            {envOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  fontSize: "48px",
+                  zIndex: 5,
+                  animation: "seal-fade 0.4s ease-out forwards",
+                  pointerEvents: "none",
+                }}
+              >
+                💗
+              </div>
+            )}
+          </div>
+
+          <div style={{ marginTop: 20, fontSize: 12, color: "#777" }}>
+            💌💕💌
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // --- Q6 + Slide 8 layouts ---
   if (slideId === "q6") {
