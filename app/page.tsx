@@ -39,8 +39,8 @@ const SLIDES: Record<SlideId, Slide> = {
 
   q1: {
     id: "q1",
-    title: "Hi Beautiful, will you be my Valentine? 💘💘",
-    subtitle: "❤️🩷❤️",
+    title: "Hi Beautiful, will you be my Valentine? 💘",
+    subtitle: "🌠☄️💫🌟",
     yesLabel: "Yes 💖",
     noLabel: "No 💔",
     yesNext: "q2",
@@ -431,7 +431,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div style={{ marginTop: 14, fontSize: 12, color: "#777" }}>💘💕💘</div>
+          <div style={{ marginTop: 14, fontSize: 12, color: "#777" }}>💕</div>
 
           <style>{`
             .stage {
@@ -1088,7 +1088,7 @@ export default function Page() {
         </div>
 
         <div style={{ marginTop: 16, fontSize: 12, color: "#777" }}>
-          💘💕💘
+          💘
         </div>
       </div>
     </div>
