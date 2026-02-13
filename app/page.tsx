@@ -32,8 +32,8 @@ type Slide = {
 const SLIDES: Record<SlideId, Slide> = {
   env: {
     id: "env",
-    title: "You've got mail 💌💖",
-    subtitle: "Click the heart seal to open… 💘💘💘",
+    title: "You've got mail 💌",
+    subtitle: "Click the heart seal to open…",
     terminal: true,
   },
 
@@ -391,7 +391,7 @@ export default function Page() {
       if (envOpen) return;
       setEnvOpen(true);
       // let the animation play, then go to Q1
-      setTimeout(() => setSlideId("q1"), 950);
+      setTimeout(() => setSlideId("q1"), 3000);
     };
 
     return (
@@ -407,8 +407,8 @@ export default function Page() {
           <div className="stage">
             {/* Letter (slides up out of the envelope) */}
             <div className={`letter ${envOpen ? "open" : ""}`}>
-              <div className="letterHead">Dear Valentine… 💖</div>
-              <div className="letterLine">I have something to ask you 🥺💘</div>
+              <div className="letterHead">Dear Lucy…</div>
+              <div className="letterLine">I have something to ask you 🥺</div>
               <div className="letterLine">Open me… 😈💕</div>
             </div>
 
