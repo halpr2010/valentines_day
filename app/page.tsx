@@ -816,7 +816,14 @@ export default function Page() {
 
           <div style={{ marginTop: 16 }}>
             <textarea
-              placeholder={`Dear Valentine… 💖\n\n[Write your full letter here]\n\n💘💘💘`}
+              placeholder={`Dear Luce, \n\n HAPPY VALENTINE’S DAY!!!!I thought you might enjoy this slightly more than a Moonpig card :)\n\nI don’t think there’s any 2 people on the planet that could’ve done as well as we have through long-distance over the last year. Your communication style always makes me feel like you’re just one room away, or about to get back from the shops with stuff we can make for dinner together. It truly hasn’t felt like there’s been almost any distance between us whatsoever.\n\nI’m so proud of you for every ounce of effort you’ve been putting into yourself over the last couple of months. All the therapy, workouts, life goals and financial planning has helped slowly transform you in ways I didn’t even think were possible. You keep surprising me with new ways you turn out to be incredible and I couldn’t love you any more than I do right at this moment.\n\nI’m so happy we’ve both managed to explore all the corners of the world to try and find out what we want in life and answer all the questions nagging in the back of our head’s whilst still being together. You’ve made me interrogate every single assumption I had about myself, what I want and why I want it (in a good way) and pushed me to build a life my 10 year old self would’ve been so excited to live.\n\nI can’t wait to be lying on a Sydney beach with you in a few weeks and being totally at peace before all the madness starts again.
+
+
+I absolutely adore you babygirl.
+
+All my love,
+Ro
+x\n\n💘💘💘`}
               style={{
                 width: "100%",
                 minHeight: 320,
