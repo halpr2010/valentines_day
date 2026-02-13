@@ -398,9 +398,9 @@ export default function Page() {
       <div style={bgStyle}>
         <div style={{ ...cardStyle, width: "min(760px, 92vw)", padding: 28 }}>
           <div style={{ position: "relative", zIndex: 10, pointerEvents: "none" }}>
-            <h1 style={{ ...titleStyle, fontSize: 28 }}>You’ve got mail 💌💖</h1>
+            <h1 style={{ ...titleStyle, fontSize: 28 }}>You’ve got mail 💌</h1>
             <p style={{ ...subtitleStyle, fontSize: 15 }}>
-              Click the heart seal to open… 💘💘💘
+              Click the heart seal to open…
             </p>
           </div>
 
@@ -409,7 +409,7 @@ export default function Page() {
             <div className={`letter ${envOpen ? "open" : ""}`}>
               <div className="letterHead">Dear Lucy…</div>
               <div className="letterLine">I have something to ask you 🥺</div>
-              <div className="letterLine">Open me… 😈💕</div>
+              <div className="letterLine">Open me… 💕</div>
             </div>
 
             {/* Envelope */}
