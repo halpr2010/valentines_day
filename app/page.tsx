@@ -49,10 +49,10 @@ const SLIDES: Record<SlideId, Slide> = {
 
   q2: {
     id: "q2",
-    title: "Will you be my Valentine? 💘💘💘",
-    subtitle: "ARE YOU SURE?????? 😳💓💓",
-    yesLabel: "Yes 😍",
-    noLabel: "No 😬",
+    title: "ARE YOU SURE?????? 🥺",
+    subtitle: "Will you be my Valentine?",
+    yesLabel: "Yes 🧨",
+    noLabel: "No 🙇",
     yesNext: "q4",
     noNext: "q5",
     yesInflatesOverTime: true, // Yes grows while you’re on this slide
@@ -61,8 +61,8 @@ const SLIDES: Record<SlideId, Slide> = {
 
   q3: {
     id: "q3",
-    title: "Will you be my Valentine? 💘💘💘",
-    subtitle: "Nu-Uhhhh. Try Again (plz) 🥺💗",
+    title: "Nu-Uhhhh. Try Again (plz) 🥺💗",
+    subtitle: "Will you be my Valentine?",
     yesLabel: "Yes 🥹💞",
     noLabel: "No 😒",
     yesNext: "q4",
@@ -73,10 +73,10 @@ const SLIDES: Record<SlideId, Slide> = {
 
   q4: {
     id: "q4",
-    title: "Will you be my Valentine? 💘💘💘💘",
-    subtitle: "Really!!!!!!! Prove it 😈💓",
-    yesLabel: "Yes 😤💖",
-    noLabel: "No 🙂",
+    title: "Really!!!!!!! Prove it",
+    subtitle: "Chase me ❗",
+    yesLabel: "Yes 💯",
+    noLabel: "No 🤰",
     yesNext: "q6",
     noNext: "q7",
     yesDodgesMouse: true, // Yes runs away from the cursor
@@ -85,9 +85,9 @@ const SLIDES: Record<SlideId, Slide> = {
 
   q5: {
     id: "q5",
-    title: "Will you be my Valentine? 💘💘💘💘💘",
-    subtitle: "Chase the heart ❤️ and click it to say yes! 🏃‍♀️💨",
-    yesLabel: "Yes 😭💞",
+    title: "Chase the heart ❤️ and click it to say yes! 🏃‍♀️💨",
+    subtitle: "Will you be my Valentine?",
+    yesLabel: "Yes 💞",
     noLabel: "No 😶",
     yesNext: "q6",
     noNext: "q7",
@@ -97,8 +97,8 @@ const SLIDES: Record<SlideId, Slide> = {
 
   q7: {
     id: "q7",
-    title: "Will you be my Valentine? 💘💘💘💘💘💘",
-    subtitle: "I don't believe you. Try this one on for size big boy 😤💗",
+    title: "I don't believe you. Try this one on for size big boy 😤💗",
+    subtitle: "Will you be my Valentine?",
     yesLabel: "Yes 💘",
     noLabel: "No 🏃‍♂️💨",
     yesNext: "q6",
@@ -109,9 +109,9 @@ const SLIDES: Record<SlideId, Slide> = {
 
   q6: {
     id: "q6",
-    title: "CONGRATULATIONS 🎉💖",
+    title: "CONGRATULATIONS 🎉",
     subtitle:
-      'YOU WON A $10 SHEIN GIFT CARD. 💸💘\nCLICK BELOW TO REDEEM YOUR PRIZE (definitely not a scam) 😇💗',
+      'YOU WON A $10 SHEIN GIFT CARD. 💸\nCLICK BELOW TO REDEEM YOUR PRIZE (definitely not a scam) 😇',
     terminal: true,
   },
 
